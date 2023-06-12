@@ -2,6 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 import button
+import game
 
 mainClock = pygame.time.Clock()
 
@@ -48,35 +49,12 @@ def main_menu():
         screen.blit(top_image, (205, 30))
 
         if start_button.draw(screen):
-            game()
+            game.game()
         if options_button.draw(screen):
             options()
         if credits_button.draw(screen):
             credits()
 
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
-
-        pygame.display.update()
-        mainClock.tick(60)
-
-
-def game():
-    running = True
-    while running:
-        screen.fill((0, 0, 0))
-
-        draw_text('Game', (255, 255, 255), screen, 20, 20)
-        click = False
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -138,6 +116,3 @@ def credits():
 
         pygame.display.update()
         mainClock.tick(60)
-
-
-main_menu()
