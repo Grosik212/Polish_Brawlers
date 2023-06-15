@@ -42,6 +42,7 @@ click = False
 
 def main_menu():
     global is_muted
+    selected_background = None
     click = False
     pygame.mixer.Sound.play(menu_music, loops=-1)
     while True:
@@ -49,9 +50,9 @@ def main_menu():
         screen.blit(top_image, (205, 30))
 
         if start_button.draw(screen):
-            game.game()
+            game.game(selected_background)
         if options_button.draw(screen):
-            options()
+            selected_background = options()
         if credits_button.draw(screen):
             credits()
 
@@ -74,17 +75,22 @@ def main_menu():
 def options():
     global is_muted
     running = True
+    selected_background = None
+    backgrounds = [
+        pygame.image.load("Backgrounds/background_bar.png"),
+        pygame.image.load("Backgrounds/cracovia.png"),
+        pygame.image.load("Backgrounds/lech.png"),
+        pygame.image.load("Backgrounds/zabka.png")
+    ]
+    thumbnail_size = (200, 150)
+    thumbnail_padding = 50
+    num_columns = 2
+    num_rows = 2
+    total_thumbnails = num_columns * num_rows
+    start_x = (screen.get_width() - (thumbnail_size[0] + thumbnail_padding) * num_columns) // 2
+    start_y = (screen.get_height() - (thumbnail_size[1] + thumbnail_padding) * num_rows) // 2
+
     while running:
-        screen.blit(background, (0, 0))
-        draw_text('Options', (255, 255, 255), screen, 280, 20)
-
-        if mute_button.draw(screen):
-            is_muted = not is_muted
-            if is_muted:
-                menu_music.stop()
-            else:
-                pygame.mixer.Sound.play(menu_music, loops=-1)
-
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -95,9 +101,54 @@ def options():
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
+                    pos = pygame.mouse.get_pos()
+                    if mute_button.rect.collidepoint(pos):
+                        is_muted = not is_muted
+                        if is_muted:
+                            menu_music.stop()
+                        else:
+                            pygame.mixer.Sound.play(menu_music, loops=-1)
+                    for i in range(total_thumbnails):
+                        col = i % num_columns
+                        row = i // num_columns
+                        x = start_x + col * (thumbnail_size[0] + thumbnail_padding)
+                        y = start_y + row * (thumbnail_size[1] + thumbnail_padding)
+                        thumbnail_rect = pygame.Rect(x, y, thumbnail_size[0], thumbnail_size[1])
+                        if thumbnail_rect.collidepoint(pos):
+                            selected_background = backgrounds[i]
+                            running = False
 
-        pygame.display.update()
-        mainClock.tick(60)
+        screen.blit(background, (0, 0))
+        draw_text('Options', (255, 255, 255), screen, 280, 20)
+
+        if mute_button.draw(screen):
+            is_muted = not is_muted
+            if is_muted:
+                menu_music.stop()
+            else:
+                pygame.mixer.Sound.play(menu_music, loops=-1)
+
+        for i in range(total_thumbnails):
+            col = i % num_columns
+            row = i // num_columns
+            x = start_x + col * (thumbnail_size[0] + thumbnail_padding)
+            y = start_y + row * (thumbnail_size[1] + thumbnail_padding)
+
+            thumbnail_rect = pygame.Rect(x, y, thumbnail_size[0], thumbnail_size[1])
+            thumbnail = pygame.transform.scale(backgrounds[i], thumbnail_size)
+            screen.blit(thumbnail, (x, y))
+            if thumbnail_rect.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(screen, (0, 255, 0), thumbnail_rect, 5)
+            else:
+                pygame.draw.rect(screen, (255, 255, 255), thumbnail_rect, 5)
+
+
+
+        pygame.display.flip()
+
+    return selected_background
+
+
 
 
 def credits():
