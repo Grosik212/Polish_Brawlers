@@ -24,7 +24,7 @@ def show_controls(screen, selected_background):
     selected_background = pygame.transform.scale(selected_background, (800, 600))
     screen.blit(selected_background, (0, 0))
     player1_controls = font.render("Player 1 Controls: A - Left, D - Right, W - Jump, E - Kick, Q - Punch", True, (255, 255, 255))
-    player2_controls = font.render("Player 2 Controls: LEFT - Left, RIGHT - Right, UP - Jump, SPACE - Kick, ALT - Punch", True, (255, 255, 255))
+    player2_controls = font.render("Player 2 Controls: LEFT - Left, RIGHT - Right, UP - Jump, SPACE - Kick, m - Punch", True, (255, 255, 255))
 
     player1_controls_rect = player1_controls.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 50))
     player2_controls_rect = player2_controls.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
@@ -55,19 +55,22 @@ def game(selected_background):
     while running:
         screen.blit(selected_background, (0, 0))
 
-        fighter1.draw(screen)
-        fighter2.draw(screen)
+        fighter1.draw(screen, fighter2)
+        fighter2.draw(screen, fighter1)
 
         fighter1.move(fighter2)
         fighter2.move(fighter1)
 
         fighter1.update()
+        fighter2.update()
 
         health_bar1.draw(screen)
         health_bar2.draw(screen)
 
         large_health_bar1.draw(screen)
         large_health_bar2.draw(screen)
+
+
 
         click = False
         for event in pygame.event.get():
