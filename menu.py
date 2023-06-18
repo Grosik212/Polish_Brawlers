@@ -42,7 +42,7 @@ click = False
 
 def main_menu():
     global is_muted
-    selected_background = None
+    selected_background = pygame.image.load("Backgrounds/background_bar.png")
     click = False
     pygame.mixer.Sound.play(menu_music, loops=-1)
     while True:
@@ -75,13 +75,13 @@ def main_menu():
 def options():
     global is_muted
     running = True
-    selected_background = None
     backgrounds = [
         pygame.image.load("Backgrounds/background_bar.png"),
         pygame.image.load("Backgrounds/cracovia.png"),
         pygame.image.load("Backgrounds/lech.png"),
         pygame.image.load("Backgrounds/zabka.png")
     ]
+    selected_background = backgrounds[0]
     thumbnail_size = (200, 150)
     thumbnail_padding = 50
     num_columns = 2
