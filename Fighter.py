@@ -1,5 +1,4 @@
 import pygame
-import game
 
 
 class Fighter(pygame.sprite.Sprite):
@@ -10,23 +9,24 @@ class Fighter(pygame.sprite.Sprite):
         self.jumping = False
         self.health = 100
         self.attack_cooldown = 0
+        self.attack_type = 'none'
 
-    def attack_kick(self, surface, target):
+    def attack_kick(self, target):
         if target.rect.x < self.rect.x:
-            attacking_rect = pygame.Rect ((self.rect.x - 100, self.rect.y + 100, 100, 80))
+            attacking_rect = pygame.Rect((self.rect.x - 100, self.rect.y + 100, 100, 80))
         else:
-            attacking_rect = pygame.Rect ((self.rect.x + 80, self.rect.y + 100, 100, 80))
-        if attacking_rect.colliderect (target.rect):
+            attacking_rect = pygame.Rect((self.rect.x + 80, self.rect.y + 100, 100, 80))
+        if attacking_rect.colliderect(target.rect):
             target.health -= 10
         self.attack_cooldown = 20
         self.attack_type = 'kick'
 
-    def attack_punch(self, surface, target):
+    def attack_punch(self, target):
         if target.rect.x < self.rect.x:
-            attacking_rect = pygame.Rect ((self.rect.x - 80, self.rect.y + 10, 80, 100))
+            attacking_rect = pygame.Rect((self.rect.x - 80, self.rect.y + 10, 80, 100))
         else:
-            attacking_rect = pygame.Rect ((self.rect.x + 80, self.rect.y + 10, 80, 100))
-        if attacking_rect.colliderect (target.rect):
+            attacking_rect = pygame.Rect((self.rect.x + 80, self.rect.y + 10, 80, 100))
+        if attacking_rect.colliderect(target.rect):
             target.health -= 5
         self.attack_cooldown = 20
         self.attack_type = 'punch'
@@ -85,13 +85,13 @@ class Player1(Fighter):
             self.attack_cooldown -= 1
 
     def draw(self, surface, target):
-        image_rect = self.image.get_rect (center = self.rect.center)
+        image_rect = self.image.get_rect(center = self.rect.center)
         if self.rect.x < target.rect.x:
-            surface.blit (self.image, image_rect)
+            surface.blit(self.image, image_rect)
         else:
-            flipped_image = pygame.transform.flip (self.image, True, False)
-            flipped_rect = flipped_image.get_rect (center = self.rect.center)
-            surface.blit (flipped_image, flipped_rect)
+            flipped_image = pygame.transform.flip(self.image, True, False)
+            flipped_rect = flipped_image.get_rect(center = self.rect.center)
+            surface.blit(flipped_image, flipped_rect)
 
     def move(self, target):
         speed = 5
@@ -129,9 +129,9 @@ class Player1(Fighter):
 
         # Attack
         if keys[pygame.K_e] and self.attack_cooldown == 0:
-            super().attack_kick(game.screen, target)
+            super().attack_kick(target)
         if keys[pygame.K_q] and self.attack_cooldown == 0:
-            super().attack_punch(game.screen, target)
+            super().attack_punch(target)
 
 
 class Player2(Fighter):
@@ -162,7 +162,6 @@ class Player2(Fighter):
             image = pygame.image.load(f"Piskel/Player2/Attack_kick/Kick-{i}.png").convert_alpha()
             self.images_kick.append(image)
 
-
     def update(self):
         # Aktualizacja animacji
         current_time = pygame.time.get_ticks()
@@ -188,13 +187,13 @@ class Player2(Fighter):
             self.attack_cooldown -= 1
 
     def draw(self, surface, target):
-        image_rect = self.image.get_rect (center = self.rect.center)
+        image_rect = self.image.get_rect(center = self.rect.center)
         if self.rect.x < target.rect.x:
-            surface.blit (self.image, image_rect)
+            surface.blit(self.image, image_rect)
         else:
-            flipped_image = pygame.transform.flip (self.image, True, False)
-            flipped_rect = flipped_image.get_rect (center = self.rect.center)
-            surface.blit (flipped_image, flipped_rect)
+            flipped_image = pygame.transform.flip(self.image, True, False)
+            flipped_rect = flipped_image.get_rect(center = self.rect.center)
+            surface.blit(flipped_image, flipped_rect)
 
     def move(self, target):
         speed = 5
@@ -232,9 +231,9 @@ class Player2(Fighter):
 
         # Atak
         if keys[pygame.K_SPACE] and self.attack_cooldown == 0:
-            super().attack_kick(game.screen, target)
+            super().attack_kick(target)
         if keys[pygame.K_m] and self.attack_cooldown == 0:
-            super().attack_punch(game.screen, target)
+            super().attack_punch(target)
 
 
 class HealthBar:

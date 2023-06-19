@@ -23,7 +23,7 @@ is_muted = False
 
 
 def draw_text(text, color, surface, x, y):
-    textobj = font.render(text, 1, color)
+    textobj = font.render(text, True, color)
     textrect = textobj.get_rect()
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
@@ -105,7 +105,7 @@ def options():
                     if mute_button.rect.collidepoint(pos):
                         is_muted = not is_muted
                         if is_muted:
-                            menu_music.stop()
+                            pygame.mixer.Sound.stop(menu_music)
                         else:
                             pygame.mixer.Sound.play(menu_music, loops=-1)
                     for i in range(total_thumbnails):
@@ -124,7 +124,7 @@ def options():
         if mute_button.draw(screen):
             is_muted = not is_muted
             if is_muted:
-                menu_music.stop()
+                pygame.mixer.Sound.stop(menu_music)
             else:
                 pygame.mixer.Sound.play(menu_music, loops=-1)
 
@@ -142,13 +142,9 @@ def options():
             else:
                 pygame.draw.rect(screen, (255, 255, 255), thumbnail_rect, 5)
 
-
-
         pygame.display.flip()
 
     return selected_background
-
-
 
 
 def credits():
