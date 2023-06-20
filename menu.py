@@ -177,4 +177,3 @@ def main_menu():
                     handle_event(event)
 
         pygame.display.update()
-

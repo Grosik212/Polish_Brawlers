@@ -9,6 +9,7 @@ screen = pygame.display.set_mode((800, 600), 0, 32)
 font = pygame.font.Font(None, 90)
 mainClock = pygame.time.Clock()
 
+
 def game_over(winner):
     if winner == 1:
         text = font.render("Player 1 wins!", True, (255, 255, 255))
@@ -88,8 +89,8 @@ def game(selected_background):
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    pygame.quit ()
-                    sys.exit ()
+                    pygame.quit()
+                    sys.exit()
 
             if event.type == KEYDOWN:
                 if event.key == K_p:
