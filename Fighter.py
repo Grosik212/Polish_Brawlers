@@ -17,7 +17,7 @@ class Fighter(pygame.sprite.Sprite):
         if target.rect.x < self.rect.x:
             attacking_rect = pygame.Rect((self.rect.x - 100, self.rect.y + 100, 100, 80))
         else:
-            attacking_rect = pygame.Rect((self.rect.x + 80, self.rect.y + 100, 100, 80))
+            attacking_rect = pygame.Rect((self.rect.x + 100, self.rect.y + 100, 100, 80))
         if attacking_rect.colliderect(target.rect):
             self.hit_sound.play()
             target.health -= 10
