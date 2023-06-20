@@ -3,22 +3,11 @@ from pygame.locals import *
 import pygame
 import Fighter
 
+
 pygame.init()
 screen = pygame.display.set_mode((800, 600), 0, 32)
 font = pygame.font.Font(None, 90)
 mainClock = pygame.time.Clock()
-
-
-# creating fighters
-fighter1 = Fighter.Player1(100, 350)
-fighter2 = Fighter.Player2(650, 350)
-
-health_bar1 = Fighter.HealthBar(fighter1)
-health_bar2 = Fighter.HealthBar(fighter2)
-
-large_health_bar1 = Fighter.LargeHealthBar(50, 50, fighter1)
-large_health_bar2 = Fighter.LargeHealthBar(500, 50, fighter2)
-
 
 def game_over(winner):
     if winner == 1:
@@ -27,7 +16,7 @@ def game_over(winner):
         text = font.render("Player 2 wins!", True, (255, 255, 255))
     text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
     screen.blit(text, text_rect)
-    pygame.display.update()
+    pygame.display.flip()
     pygame.time.delay(3000)
     pygame.quit()
     sys.exit()
@@ -66,42 +55,50 @@ def game(selected_background):
     selected_background = pygame.transform.scale(selected_background, (800, 600))
     show_controls(screen, selected_background)
     running = True
+    game_paused = False
+
+    # creating fighters
+    fighter1 = Fighter.Player1(100, 350)
+    fighter2 = Fighter.Player2(650, 350)
+
     while running:
         screen.blit(selected_background, (0, 0))
 
-        fighter1.draw(screen, fighter2)
-        fighter2.draw(screen, fighter1)
+        if not game_paused:
+            fighter1.draw(screen, fighter2)
+            fighter2.draw(screen, fighter1)
 
-        fighter1.move(fighter2)
-        fighter2.move(fighter1)
+            fighter1.move(fighter2)
+            fighter2.move(fighter1)
 
-        fighter1.update()
-        fighter2.update()
+            fighter1.update()
+            fighter2.update()
 
-        health_bar1.draw(screen)
-        health_bar2.draw(screen)
+            Fighter.HealthBar(fighter1).draw(screen)
+            Fighter.HealthBar(fighter2).draw(screen)
 
-        large_health_bar1.draw(screen)
-        large_health_bar2.draw(screen)
+            Fighter.LargeHealthBar(50, 50, fighter1).draw(screen)
+            Fighter.LargeHealthBar(500, 50, fighter2).draw(screen)
 
-        if fighter1.health <= 0:
-            game_over(2)
-        if fighter2.health <= 0:
-            game_over(1)
+            if fighter1.health <= 0:
+                game_over(2)
+            if fighter2.health <= 0:
+                game_over(1)
 
-        click = False
         for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
+                    pygame.quit ()
+                    sys.exit ()
 
-        pygame.display.update()
+            if event.type == KEYDOWN:
+                if event.key == K_p:
+                    game_paused = not game_paused
+
+        if game_paused:
+            pause_text = font.render("Game Paused", True, (255, 255, 255))
+            pause_text_rect = pause_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+            screen.blit(pause_text, pause_text_rect)
+
+        pygame.display.flip()
         mainClock.tick(60)
-

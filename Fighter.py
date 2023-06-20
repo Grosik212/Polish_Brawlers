@@ -10,6 +10,8 @@ class Fighter(pygame.sprite.Sprite):
         self.health = 100
         self.attack_cooldown = 0
         self.attack_type = 'none'
+        self.hit_sound = pygame.mixer.Sound("Music/punch.mp3")
+        self.hit_sound.set_volume(0.5)
 
     def attack_kick(self, target):
         if target.rect.x < self.rect.x:
@@ -17,6 +19,7 @@ class Fighter(pygame.sprite.Sprite):
         else:
             attacking_rect = pygame.Rect((self.rect.x + 80, self.rect.y + 100, 100, 80))
         if attacking_rect.colliderect(target.rect):
+            self.hit_sound.play()
             target.health -= 10
         self.attack_cooldown = 20
         self.attack_type = 'kick'
@@ -27,6 +30,7 @@ class Fighter(pygame.sprite.Sprite):
         else:
             attacking_rect = pygame.Rect((self.rect.x + 80, self.rect.y + 10, 80, 100))
         if attacking_rect.colliderect(target.rect):
+            self.hit_sound.play()
             target.health -= 5
         self.attack_cooldown = 20
         self.attack_type = 'punch'
@@ -36,32 +40,29 @@ class Player1(Fighter):
     def __init__(self, x, y):
         super().__init__(x, y)
         # Animations
-        self.images_walking = []  # List storing walking animation images
-        self.images_punch = []  # List storing punch animation images
-        self.images_kick = []  # List storing kick animation images
-        self.current_frame = 0  # Current animation frame
-        self.animation_delay = 100  # Delay between animation frames (smaller value = faster animation)
-        self.last_frame_change = pygame.time.get_ticks()  # Time of the last frame change
-        self.load_images()  # Loading animation images
-        self.image = self.images_walking[self.current_frame]  # Setting the initial image
+        self.images_walking = []
+        self.images_punch = []
+        self.images_kick = []
+        self.current_frame = 0
+        self.animation_delay = 100
+        self.last_frame_change = pygame.time.get_ticks()
+        self.load_images()
+        self.image = self.images_walking[self.current_frame]
 
     def load_images(self):
         for i in range(1, 4):
-            image = pygame.image.load(f"Piskel/Player1/Walking/Walking-{i}.png").convert_alpha()
+            image = pygame.image.load(f"Graphics/Piskel/Player1/Walking/Walking-{i}.png").convert_alpha()
             self.images_walking.append(image)
 
-        # Loading punch animation images
         for i in range(1, 3):
-            image = pygame.image.load(f"Piskel/Player1/Attack_punch/Punch-{i}.png").convert_alpha()
+            image = pygame.image.load(f"Graphics/Piskel/Player1/Attack_punch/Punch-{i}.png").convert_alpha()
             self.images_punch.append(image)
 
-        # Loading kick animation images
         for i in range(1, 3):
-            image = pygame.image.load(f"Piskel/Player1/Attack_kick/Kick-{i}.png").convert_alpha()
+            image = pygame.image.load(f"Graphics/Piskel/Player1/Attack_kick/Kick-{i}.png").convert_alpha()
             self.images_kick.append(image)
 
     def update(self):
-        # Updating animation
         current_time = pygame.time.get_ticks()
         if current_time - self.last_frame_change >= self.animation_delay:
             self.current_frame += 1
@@ -70,17 +71,15 @@ class Player1(Fighter):
 
             if self.attack_cooldown > 0:
                 if self.attack_type == 'punch':
-                    # Punch animation during cooldown
+                    # Animacja punch
                     self.image = self.images_punch[self.current_frame % len(self.images_punch)]
-
                 elif self.attack_type == 'kick':
-                    # Kick animation during cooldown
+                    # Animacja kopania
                     self.image = self.images_kick[self.current_frame % len(self.images_kick)]
             else:
                 self.image = self.images_walking[self.current_frame]
-
             self.last_frame_change = current_time
-
+        # zmniejszanie cooldownu
         if self.attack_cooldown > 0:
             self.attack_cooldown -= 1
 
@@ -105,7 +104,7 @@ class Player1(Fighter):
         if keys[pygame.K_d]:
             dx = speed
 
-        # Staying on the screen
+        # Granice poruszania
         if self.rect.left + dx < 0:
             dx = -self.rect.left
         if self.rect.right + dx > 800:
@@ -115,19 +114,19 @@ class Player1(Fighter):
             self.vel_y = 0
             self.jumping = False
 
-        # Jump
+        # skok
         if self.vel_y == 0 and keys[pygame.K_w] and not self.jumping:
             self.vel_y = -30
             self.jumping = True
 
-        # Applying gravity
+        # Grawitka
         self.vel_y += gravity
         dy += self.vel_y
 
         self.rect.x += dx
         self.rect.y += dy
 
-        # Attack
+        # Atak
         if keys[pygame.K_e] and self.attack_cooldown == 0:
             super().attack_kick(target)
         if keys[pygame.K_q] and self.attack_cooldown == 0:
@@ -138,28 +137,26 @@ class Player2(Fighter):
     def __init__(self, x, y):
         super().__init__(x, y)
         # Animacje
-        self.images_walking = []  # Lista przechowująca obrazy animacji chodzenia
-        self.images_punch = []  # Lista przechowująca obrazy animacji uderzenia pięścią
-        self.images_kick = []  # Lista przechowująca obrazy animacji kopnięcia
-        self.current_frame = 0  # Aktualna klatka animacji
-        self.animation_delay = 100  # Opóźnienie między klatkami animacji (im mniejsza wartość, tym szybsza animacja)
-        self.last_frame_change = pygame.time.get_ticks()  # Czas ostatniej zmiany klatki
-        self.load_images()  # Ładowanie obrazów animacji
-        self.image = self.images_walking[self.current_frame]  # Ustawienie obrazu początkowego
+        self.images_walking = []
+        self.images_punch = []
+        self.images_kick = []
+        self.current_frame = 0
+        self.animation_delay = 100
+        self.last_frame_change = pygame.time.get_ticks()
+        self.load_images()
+        self.image = self.images_walking[self.current_frame]
 
     def load_images(self):
         for i in range(1, 4):
-            image = pygame.image.load(f"Piskel/Player2/Walking/Walking-{i}.png").convert_alpha()
+            image = pygame.image.load(f"Graphics/Piskel/Player2/Walking/Walking-{i}.png").convert_alpha()
             self.images_walking.append(image)
 
-        # Ładowanie obrazów animacji uderzenia pięścią
         for i in range(1, 3):
-            image = pygame.image.load(f"Piskel/Player2/Attack_punch/Punch-{i}.png").convert_alpha()
+            image = pygame.image.load(f"Graphics/Piskel/Player2/Attack_punch/Punch-{i}.png").convert_alpha()
             self.images_punch.append(image)
 
-        # Ładowanie obrazów animacji kopnięcia
         for i in range(1, 3):
-            image = pygame.image.load(f"Piskel/Player2/Attack_kick/Kick-{i}.png").convert_alpha()
+            image = pygame.image.load(f"Graphics/Piskel/Player2/Attack_kick/Kick-{i}.png").convert_alpha()
             self.images_kick.append(image)
 
     def update(self):
@@ -172,10 +169,10 @@ class Player2(Fighter):
 
             if self.attack_cooldown > 0:
                 if self.attack_type == 'punch':
-                    # Animacja punch w trakcie cooldown
+                    # Animacja punch
                     self.image = self.images_punch[self.current_frame % len(self.images_punch)]
                 elif self.attack_type == 'kick':
-                    # Animacja kopania w trakcie cooldown
+                    # Animacja kopania
                     self.image = self.images_kick[self.current_frame % len(self.images_kick)]
             else:
 
@@ -207,7 +204,7 @@ class Player2(Fighter):
         if keys[pygame.K_RIGHT]:
             dx = speed
 
-        # Pozostanie na ekranie
+        # Granice poruszania
         if self.rect.left + dx < 0:
             dx = -self.rect.left
         if self.rect.right + dx > 800:
@@ -217,12 +214,12 @@ class Player2(Fighter):
             self.vel_y = 0
             self.jumping = False
 
-        # Skok
+        # skok
         if self.vel_y == 0 and keys[pygame.K_UP] and not self.jumping:
             self.vel_y = -30
             self.jumping = True
 
-        # Zastosowanie grawitacji
+        # Grawitka
         self.vel_y += gravity
         dy += self.vel_y
 
