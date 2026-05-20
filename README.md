@@ -8,12 +8,25 @@ Polish Brawlers is a 2D fighting game inspired by classic street fighter games, 
 - **Local Co-op Multiplayer**: Challenge a friend to a match on the same device.
 - **Multiple Backgrounds to choose from.**
 
+## Installation & Running
 
-## Installation
-1. **Clone the Repository:**
+### Option 1: Play via Executable (Windows)
+1. **Clone or Download the Repository:**
    ```bash
    git clone https://github.com/Grosik212/Polish_Brawlers.git
-2. **Run `main.exe` and enjoy**
+   ```
+2. Navigate to the folder, run `main.exe` and enjoy!
+
+### Option 2: Run from Python Source
+1. Make sure you have Python installed.
+2. Install the required Pygame library:
+   ```bash
+   pip install pygame
+   ```
+3. Run the main script:
+   ```bash
+   python main.py
+   ```
 
 ## Controls:
 <div align="left">
@@ -29,4 +42,3 @@ Polish Brawlers is a 2D fighting game inspired by classic street fighter games, 
 <div align="left">
   <img src="https://github.com/Grosik212/Polish_Brawlers/assets/100710744/d8eb4141-5f59-415d-90f5-8471a290645f" alt="Backgrounds" width="400" />
 </div>
-
